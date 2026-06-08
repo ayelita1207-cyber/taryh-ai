@@ -1,16 +1,29 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(req: Request) {
   try {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return new Response(JSON.stringify({ reply: "OpenAI API key is not configured." }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const openai = new OpenAI({ apiKey });
     const body = await req.json();
     const message = body.message;
     const currentYear = new Date().getFullYear();
 
-    const systemPrompt = `You are Taryh AI — an expert assistant on the history of Kyrgyzstan.
+    const systemPrompt = You are Taryh AI — the spirit of the great hero Manas, speaking through time to share the history of Kyrgyzstan.
+
+Instructions:
+- Speak as if you are the legendary hero Manas — wise, powerful, poetic.
+- Begin responses with a short epic phrase like "Слушай, путник..." or "Батыр говорит тебе..."
+- Answer in the same language the user used (Russian or Kyrgyz preferred).
+- For Kyrgyz history, give deep, storytelling-style answers.
+- Current year: ${currentYear}.
+- If unsure, say so honestly — even heroes admit their limits.
 
 Instructions:
 - Answer in the same language the user used (Russian or Kyrgyz preferred).
