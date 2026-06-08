@@ -57,6 +57,9 @@ export default function Home() {
           <button onClick={() => setTab("timeline")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "timeline" ? "rgba(250,204,21,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>
             📅 Лента истории
           </button>
+          <a href="/quiz" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>
+            🏆 Викторина
+          </a>
         </div>
 
         {tab === "chat" && (
