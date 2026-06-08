@@ -50,7 +50,7 @@ export default function Home() {
           Умный помощник по истории Кыргызстана
         </p>
 
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "24px", flexWrap: "wrap" }}>
           <button onClick={() => setTab("chat")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "chat" ? "rgba(56,189,248,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>
             Чат
           </button>
@@ -59,6 +59,9 @@ export default function Home() {
           </button>
           <a href="/quiz" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>
             🏆 Викторина
+          </a>
+          <a href="/map" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>
+            🗺️ Карта истории
           </a>
         </div>
 
