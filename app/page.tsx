@@ -91,7 +91,7 @@ export default function Home() {
           Taryh AI
         </h1>
         <p style={{ textAlign: "center", color: "#cbd5e1", marginBottom: "20px" }}>
-          Умный помощник по истории Кыргызстана
+          Умный помощник по истории Кыргызстана kg
         </p>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "24px", flexWrap: "wrap" }}>
