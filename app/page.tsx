@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const timelineEvents = [
   { year: "III в. до н.э.", title: "Первые упоминания кыргызов", desc: "Кыргызы впервые упомянуты в китайских летописях как народ на берегах Енисея.", color: "#534AB7", prompt: "Расскажи подробнее о первых упоминаниях кыргызов в истории" },
@@ -16,6 +16,50 @@ export default function Home() {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; imageUrl?: string | null; }[]>([]);
   const [tab, setTab] = useState<"chat" | "timeline">("chat");
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  function copyText(text: string, index: number) {
+    try {
+      navigator.clipboard.writeText(text);
+    } catch {
+      const el = document.createElement("textarea");
+      el.value = text;
+      el.style.position = "fixed";
+      el.style.opacity = "0";
+      document.body.appendChild(el);
+      el.focus();
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  }
+
+  function speakText(text: string, index: number) {
+    if (playingIndex === index) {
+      window.speechSynthesis.cancel();
+      setPlayingIndex(null);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "ru-RU";
+    utter.rate = 0.75;
+    utter.pitch = 0.5;
+    utter.volume = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const maleVoice = voices.find(v => v.lang.startsWith("ru") && v.name.toLowerCase().includes("male"))
+      || voices.find(v => v.lang.startsWith("ru"))
+      || voices[0];
+    if (maleVoice) utter.voice = maleVoice;
+    synthRef.current = utter;
+    utter.onend = () => setPlayingIndex(null);
+    window.speechSynthesis.speak(utter);
+    setPlayingIndex(index);
+  }
 
   async function askAI(customMessage?: string) {
     const msg = customMessage || question;
@@ -51,18 +95,10 @@ export default function Home() {
         </p>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "24px", flexWrap: "wrap" }}>
-          <button onClick={() => setTab("chat")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "chat" ? "rgba(56,189,248,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>
-            Чат
-          </button>
-          <button onClick={() => setTab("timeline")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "timeline" ? "rgba(250,204,21,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>
-            📅 Лента истории
-          </button>
-          <a href="/quiz" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>
-            🏆 Викторина
-          </a>
-          <a href="/map" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>
-            🗺️ Карта истории
-          </a>
+          <button onClick={() => setTab("chat")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "chat" ? "rgba(56,189,248,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>Чат</button>
+          <button onClick={() => setTab("timeline")} style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: tab === "timeline" ? "rgba(250,204,21,0.2)" : "transparent", color: "white", cursor: "pointer", fontSize: "14px" }}>📅 Лента истории</button>
+          <a href="/quiz" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>🏆 Викторина</a>
+          <a href="/map" style={{ padding: "10px 24px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "white", fontSize: "14px", textDecoration: "none" }}>🗺️ Карта истории</a>
         </div>
 
         {tab === "chat" && (
@@ -78,6 +114,24 @@ export default function Home() {
                     {msg.content}
                     {msg.role === "assistant" && msg.imageUrl && (
                       <img src={msg.imageUrl} alt="историческое фото" style={{ display: "block", marginTop: "12px", borderRadius: "12px", maxWidth: "100%", maxHeight: "200px", objectFit: "cover" }} />
+                    )}
+                    {msg.role === "assistant" && (
+                      <div style={{ display: "flex", gap: "4px", marginTop: "10px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "8px" }}>
+                        <button
+                          onClick={() => copyText(msg.content, index)}
+                          title="Копировать"
+                          style={{ display: "flex", alignItems: "center", gap: "4px", padding: "4px 10px", borderRadius: "6px", border: "none", background: copiedIndex === index ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.06)", color: copiedIndex === index ? "#22c55e" : "#94a3b8", cursor: "pointer", fontSize: "12px", transition: "all 0.2s" }}
+                        >
+                          {copiedIndex === index ? "✓ Скопировано" : "⎘ Копировать"}
+                        </button>
+                        <button
+                          onClick={() => speakText(msg.content, index)}
+                          title="Слушать"
+                          style={{ display: "flex", alignItems: "center", gap: "4px", padding: "4px 10px", borderRadius: "6px", border: "none", background: playingIndex === index ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.06)", color: playingIndex === index ? "#f59e0b" : "#94a3b8", cursor: "pointer", fontSize: "12px", transition: "all 0.2s" }}
+                        >
+                          {playingIndex === index ? "⏸ Пауза" : "🔊 Слушать"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
