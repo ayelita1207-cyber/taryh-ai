@@ -82,9 +82,9 @@ export default function Home() {
   }
 
   return (
-    <main style={{ minHeight: "100vh", position: "relative", overflow: "hidden", background: "radial-gradient(circle at top, #0f172a 0%, #020617 40%, #000000 100%)", color: "white", padding: "20px", fontFamily: "Arial" }}>
-      <div style={{ position: "fixed", left: 0, top: 0, bottom: 0, width: "180px", pointerEvents: "none", zIndex: 0, backgroundImage: "linear-gradient(180deg, rgba(255,215,0,0.22), transparent 35%)", opacity: 0.85 }} />
-      <div style={{ position: "fixed", right: 0, top: 0, bottom: 0, width: "180px", pointerEvents: "none", zIndex: 0, backgroundImage: "linear-gradient(180deg, rgba(255,215,0,0.22), transparent 35%)", opacity: 0.85 }} />
+    <main style={{ minHeight: "100vh", position: "relative", overflow: "hidden", backgroundImage: "url('/bg.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", color: "white", padding: "20px", fontFamily: "Arial" }}>
+      {/* Тёмный оверлей поверх фото */}
+      <div style={{ position: "fixed", inset: 0, background: "rgba(0, 5, 20, 0.62)", zIndex: 0, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "900px", margin: "0 auto", paddingTop: "60px" }}>
         <h1 style={{ textAlign: "center", fontSize: "52px", background: "linear-gradient(90deg, #facc15, #f59e0b, #f97316, #38bdf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: "10px", fontWeight: "bold" }}>
