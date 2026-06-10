@@ -47,9 +47,14 @@ export default function Quiz() {
   return (
     <main style={{ minHeight: "100vh", background: "radial-gradient(circle at top, #0f172a 0%, #020617 40%, #000000 100%)", color: "white", padding: "20px", fontFamily: "Arial", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ maxWidth: "600px", width: "100%" }}>
-        <h1 style={{ textAlign: "center", fontSize: "36px", background: "linear-gradient(90deg, #facc15, #f59e0b, #f97316, #38bdf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: "8px", fontWeight: "bold" }}>
-          Тарых Викторина
-        </h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+          <h1 style={{ fontSize: "36px", background: "linear-gradient(90deg, #facc15, #f59e0b, #f97316, #38bdf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: "bold", margin: 0 }}>
+            Тарых Викторина
+          </h1>
+          <a href="/" style={{ padding: "10px 20px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)", color: "white", fontSize: "14px", textDecoration: "none" }}>
+            ← На главную
+          </a>
+        </div>
         <p style={{ textAlign: "center", color: "#94a3b8", marginBottom: "32px" }}>История Кыргызстана 🇰🇬</p>
 
         {!finished ? (
